@@ -15,9 +15,9 @@ public abstract class AbstractAudioFile implements Playable,StatusCheckable {
         if (isOpened) {
             isOpened = false;
             isPaused = false;
-            System.out.println(fileName + " зупинено.");
+            System.out.println(fileName + " закрито.");
         } else {
-            System.out.println("Неможливо зупинити файл, оскільки він не відтворюється: " + fileName);
+            System.out.println("Неможливо закрити файл, оскільки він не відтворюється: " + fileName);
         }
     }
 
@@ -26,12 +26,12 @@ public abstract class AbstractAudioFile implements Playable,StatusCheckable {
     public abstract void pause();
     
     public void getStatus() {
-        if (isOpened) {
-            System.out.println("Файл " + this.fileName + " відтворюється.");
-        } else if (isPaused) {
+        if (isPaused) {
         	System.out.println("Файл " + this.fileName + " на паузі.");
+        } else if (isOpened) {
+        	System.out.println("Файл " + this.fileName + " відтворюється.");
         } else {
-        	System.out.println("Файл " + this.fileName + " зупинений.");
+        	System.out.println("Файл " + this.fileName + " закритий.");
         }
     }
 }
