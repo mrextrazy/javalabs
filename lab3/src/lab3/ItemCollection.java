@@ -1,7 +1,7 @@
 package lab3;
 import java.util.Objects;
 public class ItemCollection {
-	private Item[] items;
+    private Item[] items;
 
     public ItemCollection(Item[] items) {
         this.items = items;
@@ -14,40 +14,58 @@ public class ItemCollection {
             Boolean isBackstagePass = Objects.equals(item.name, "Backstage passes to a TAFKAL80ETC concert");
             Boolean isSulfuras = Objects.equals(item.name, "Sulfuras, Hand of Ragnaros");
 
-            if (!isAgedBrie && !isBackstagePass && !isSulfuras && item.quality > 0) {
-                item.quality--;
+            if (!isAgedBrie && !isBackstagePass && !isSulfuras) {
+                decreaseQuality(item);
             }
 
             if (isAgedBrie || isBackstagePass) {
-                if (item.quality < 50) {
-                    item.quality++;
-                }
+                increaseQualityIfPossible(item);
             }
             if (isBackstagePass) {
-                if (item.sellIn < 11 && item.quality < 50) {
-                    item.quality++;
-                }
-                if (item.sellIn < 6 && item.quality < 50) {
-                    item.quality++;
-                }
+                applyBackstagePassRules(item);
             }
             if (!isSulfuras) {
                 item.sellIn--;
             }
 
             if (item.sellIn < 0) {
-                if (!isAgedBrie && !isBackstagePass && !isSulfuras && item.quality > 0) {
-                    item.quality--;
-                }
-
-                if (isBackstagePass) {
-                    item.quality = 0;
-                }
-
-                if (isAgedBrie && item.quality < 50) {
-                    item.quality++;
-                }
+                applyExpiredItemRules(item, isAgedBrie, isBackstagePass, isSulfuras);
             }
+        }
+    }
+
+    private void increaseQualityIfPossible(Item item) {
+        if (item.quality < 50) {
+            item.quality++;
+        }
+    }
+
+    private void decreaseQuality(Item item) {
+        if (item.quality > 0) {
+            item.quality--;
+        }
+    }
+
+    private void applyBackstagePassRules(Item item) {
+        if (item.sellIn < 11) {
+            increaseQualityIfPossible(item);
+        }
+        if (item.sellIn < 6) {
+            increaseQualityIfPossible(item);
+        }
+    }
+
+    private void applyExpiredItemRules(Item item, Boolean isAgedBrie, Boolean isBackstagePass, Boolean isSulfuras) {
+        if (!isAgedBrie && !isBackstagePass && !isSulfuras) {
+            decreaseQuality(item);
+        }
+
+        if (isBackstagePass) {
+            item.quality = 0;
+        }
+
+        if (isAgedBrie) {
+            increaseQualityIfPossible(item);
         }
     }
 }
